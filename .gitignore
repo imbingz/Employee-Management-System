@@ -1,0 +1,6 @@
+node_modules
+.git
+.vscode
+.DS_Store
+insert.sql
+.env
