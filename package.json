@@ -4,7 +4,9 @@
   "description": "A Content Management System solution for managing a company's employees using node, inquirer, and MySQL",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "watch": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +18,13 @@
   "bugs": {
     "url": "https://github.com/imbingz/Employee-Management-System/issues"
   },
-  "homepage": "https://github.com/imbingz/Employee-Management-System#readme"
+  "homepage": "https://github.com/imbingz/Employee-Management-System#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "inquirer": "^7.3.3",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
 }
