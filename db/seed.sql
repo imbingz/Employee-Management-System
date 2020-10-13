@@ -10,11 +10,13 @@ ALTER TABLE department AUTO_INCREMENT = 1;
 INSERT INTO department
 	(name)
 VALUES
+	("Board Member"),
+	("Operation"),
 	("Finance"),
 	("Sales"),
 	("HR"),
 	("Marketing"),
-	("Engineer"),
+	("IT"),
 	("Legal");
 
 
@@ -24,20 +26,26 @@ DELETE FROM role;
 SET SQL_SAFE_UPDATES = 1;
 ALTER TABLE role AUTO_INCREMENT = 1;
 INSERT INTO role
-	(department_id, title, salary)
+	(title, salary, department_id)
 VALUES
-	(1, "Accountant", 125000),
-	(1, "Account Manager", 150000),
-	(2, "Salesperson", 95000),
-	(2, "Sales Manager", 160000),
-	(3, "HR Admin", 87000),
-	(3, "HR Manager", 158000),
-	(4, "Social Meida Admin", 75000),
-	(4, "Marketing Manager", 140000),
-	(5, "Junior Engineer", 85000),
-	(5, "Lead Engineer", 160000),
-	(6, "Legal Council", 180000),
-	(6, "Legal Assistant", 100000);
+	("Accountant", 125000, 3),
+	("Account Manager", 150000, 3),
+	("Salesperson", 95000, 4),
+	("Sales Manager", 160000, 4),
+	("Secretary", 65000, 2),
+	("HR Admin", 87000, 5),
+	("HR Manager", 158000, 5),
+	("Social Meida Admin", 75000, 6),
+	("Marketing Manager", 140000, 6),
+	("Junior Engineer", 85000, 7),
+	("Lead Engineer", 160000, 7),
+	("Legal Council", 180000, 8),
+	("Legal Assistant", 100000, 8),
+	("CFO", 225000, 3),
+	("CMO", 200000, 6),
+	("CTO", 250000, 7),
+	("CEO", 300000, 1),
+	("COO", 275000, 2);
 
 
 -- EMPLOYEE TABLE 
@@ -46,20 +54,27 @@ DELETE FROM employee;
 SET SQL_SAFE_UPDATES = 1;
 ALTER TABLE employee AUTO_INCREMENT = 1;
 INSERT INTO employee
-	(role_id, first_name, last_name, manager_id)
+	(first_name, last_name, role_id, manager_id)
 VALUES
-	(1, "Yo", "Shi", 2),
-	(2, "Yoda", "Shiya", null),
-	(3, "Yosih", "Tomaya", null),
-	(4, "Bret", "Graham", null),
-	(5, "Kulas", "Light", 4),
-	(6, "John", "Smith", null),
-	(7, "Mary", "Jane", 6),
-	(8, "Jane", "Doe", null),
-	(9, "Victor", "Pains", 8),
-	(10, "Ervin", "Howell", null),
-	(11, "Ana", "Goodwill", null),
-	(12, "Roma", "Crona", 11);
+	("Hazel", "Cole", 17 , null),
+	("Yo", "Shi", 1, null),
+	("Yoda", "Shiya", 2, null),
+	("Yosih", "Tomaya", 3, null),
+	("Bret", "Graham", 4, null),
+	("Kulas", "Light", 5, 4),
+	("John", "Smith", 6, null),
+	("Mary", "Jane", 7, 6),
+	("Jane", "Doe", 8, null),
+	("Victor", "Pains", 9, 8),
+	("Ervin", "Howell", 10, null),
+	("Darcy", "Goodwill", 11, null),
+	("Steven", "King", 11, 17),
+	("Jon", "Crisma", 12, 17),
+	("Mike", "Goodrum", 13, 17),
+	("Peter", "Steek", 14, 17),
+	("Saul", "Howard", 15, 17),
+	("Nick", "Sol", 16, 17);
+
 
 
 -- SELF JOIN - SET MANAGER_ID 
