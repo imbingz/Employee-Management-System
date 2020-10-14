@@ -111,26 +111,37 @@ function readEmpByMngr() {
   );
 };
 
-//Function to handle "Add employees by managers"
-function addEmployees() {
-  //SELECT role.id, role.title and manager.id and manager name using mulitple query selectors 
-  con.promise().query('SELECT id, title FROM role r; SELECT m.id, CONCAT(m.first_name, " ",  m.last_name) AS manager FROM employee m LEFT JOIN employee e ON m.id = e.manager_id WHERE m.manager_id != ? ORDER BY manager ASC', ["null"])
-    .then(([res]) => {
-      //Get the roles and managers for prompt choices 
-      let roles = [];
-      let managers = [];
-      res[0].forEach(role => roles.push(role.title));
-      res[1].forEach(manager => managers.push(manager.manager));
+// Use async ... await 
+async function addEmployees() {
+  //import promise client
+  const promise = require('mysql2/promise');
+
+  // create the connection
+  const connection = await promise.createConnection({ host: 'localhost', user: 'root', database: 'employee_db', password: 'password' });
+
+  //Get the roles and managers for prompt choices 
+  let roles = [];
+  let managers = [];
+
+  const [roleRes] = await connection.execute("SELECT id, title FROM role r");
+  roleRes.forEach(role => roles.push(role.title));
+
+  const [managerRes] = await connection.execute('SELECT m.id, CONCAT(m.first_name, " ",  m.last_name) AS manager FROM employee m LEFT JOIN employee e ON m.id = e.manager_id WHERE m.manager_id != ? ORDER BY manager ASC', ["null"]);
+
+  managerRes.forEach(manager => managers.push(manager.manager));
+
+  // Prompt "Add employees" questions 
 
 
 
+  
 
-
-
-
-      
-    });
 }
+
+
+
+
+//Function to handle "Add employees by managers"
 
 
 
