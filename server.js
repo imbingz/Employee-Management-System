@@ -6,7 +6,8 @@ const connection = require('./lib/connection');
 const cTable = require('console.table');
 const term = require("terminal-kit").terminal;
 const startDisplay = require('./lib/starter');
-const questions = require('./lib/questions');
+
+// const questions = require('./lib/questions');
 
 
 // DISPLAY EMPLOYEE TRACKER WHEN STARTING THE APP =============================================================================================
@@ -16,7 +17,12 @@ const questions = require('./lib/questions');
 
 function start() {
   prompt(
-    questions[0]
+    {
+      name: "task",
+      type: "list",
+      message: "What would you like to do?",
+      choices: ["View all employees", "View all employees by Department", "View all employees by Managers", "Add employees", "Remove employees", "Update employees", "Update employee Manager", "View all Roles", "View all Department", "Exit"]
+    }
   )
     .then(answer => {
 
@@ -125,11 +131,12 @@ async function addEmployees() {
   let managers = [];
 
   const [roleRes] = await connection.execute("SELECT id, title FROM role r");
-  roleRes.forEach(role => roles.push(role.title));
+
+  roleRes.forEach(role => roles.push({ name: role.title, value: role.id }));
 
   const [managerRes] = await connection.execute('SELECT m.id, CONCAT(m.first_name, " ",  m.last_name) AS manager FROM employee m LEFT JOIN employee e ON m.id = e.manager_id WHERE m.manager_id != ? ORDER BY manager ASC', ["null"]);
 
-  managerRes.forEach(manager => managers.push(manager.manager));
+  managerRes.forEach(manager => managers.push({ name: manager.manager, value: manager.id }));
 
   // Prompt "Add employees" questions 
 
@@ -183,10 +190,12 @@ async function addEmployees() {
   ])
 
   if (answer.addManagerNot === false) {
-    
+    await connection.execute("INSERT INTO employee (first_name, last_name, role_id) VALUES (?, ?, ?)", [answer.firstName, answer.lastName, answer.role]);
+  } else {
+    await connection.execute("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.firstName, answer.lastName, answer.role, answer.manager]);
   }
   
-
+  term.bgBlue.bold.black("\nAn employee has been added successfully!\n");
 }
 
 
