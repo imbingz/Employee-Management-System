@@ -28,19 +28,19 @@ function start() {
 
       switch (answer.task) {
         case "View all employees":
-          readAllEmployees();
+          viewAllEmployees();
           break;
         case "View all employees by Department":
-          readEmpByDept();
+          viewEmpByDept();
           break;
         case "View all employees by Managers":
-          readEmpByMngr();
+          viewEmpByMngr();
           break;
         case "Add employees":
           addEmployees();
           break;
         case "Remove employees":
-          deleteEmployees();
+          removeEmployees();
           break;
         case "Update employees":
           updateEmployees();
@@ -63,7 +63,7 @@ function start() {
 // FUNCTIONS TO HANDLE EACH CASE ===============================================================================================
 
 // Function to handle "View all employees"
-function readAllEmployees() {
+function viewAllEmployees() {
   //SELECT all employeeID, name, title, salary, department, manager to display
   connection.query(
     "SELECT e.id, e.first_name, e.last_name, r.title, r.salary, d.name AS department, CONCAT(m.first_name, ' ',  m.last_name) AS manager FROM employee e LEFT JOIN role r ON e.role_id = r.id LEFT JOIN department d on r.department_id = d.id LEFT JOIN employee m ON m.id = e.manager_id",
@@ -82,7 +82,7 @@ function readAllEmployees() {
 };
 
 //Function to handle "View all employees by department"
-function readEmpByDept() {
+function viewEmpByDept() {
   //SELECT all employeeID, name, title, salary, department ORDERED by department 
   connection.query(
     "SELECT d.id, d.name AS department, r.title, e.first_name, e.last_name, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM department d LEFT JOIN role r on r.department_id = d.id LEFT JOIN employee e ON e.role_id = r.id LEFT JOIN employee m ON m.id = e.manager_id",
@@ -100,7 +100,7 @@ function readEmpByDept() {
 };
 
 //Function to handle "View all employees by managers"
-function readEmpByMngr() {
+function viewEmpByMngr() {
   //SELECT all managerID, name, title, salary, department ORDERED BY manager_id
   connection.query(
     "SELECT m.manager_id, m.first_name, m.last_name, r.title, r.salary, d.name AS department FROM employee m LEFT JOIN employee e ON m.id = e.manager_id LEFT JOIN role r on m.role_id = r.id LEFT JOIN department d on r.department_id = d.id",
@@ -195,11 +195,41 @@ async function addEmployees() {
     await connection.execute("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.firstName, answer.lastName, answer.role, answer.manager]);
   }
   
-  term.bgBlue.bold.black("\nAn employee has been added successfully!\n");
+  //Notify user 
+  term.bgBlue.bold.black("\nAn employee has been added successfully!");
+  console.log("\n");
+  
+  //Start mainMenu 
+  start()
 }
 
 
+//Function to handle "Remove employees"
+function removeEmployees() {
 
+  //Get employee id and name for prompt's choice
+  connection.promise().query('SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee ORDER BY name ASC')
+    .then(([res]) => {
+
+      let employees = [];
+
+      res.forEach(employee => employees.push({ name: employee.name, value: employee.id }));
+
+      //Prompt questions 
+      prompt({
+        name: "empID",
+        type: "list",
+        message: "Which employee would you like to remove?",
+        choices: employees
+      }).then(answer => {
+        connection.promise().query('DELETE FROM employee WHERE id=?', [answer.empID]);
+
+        //Notify user 
+        term.bgYellow.bold.black("\nSelected employee has been removed successfully!");
+        console.log("\n");
+      })
+    });
+}
 
 
 
