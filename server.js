@@ -215,7 +215,7 @@ function removeEmployees() {
 
       res.forEach(employee => employees.push({ name: employee.name, value: employee.id }));
 
-      //Prompt questions 
+      //Prompt questions - remove Employee
       prompt({
         name: "empID",
         type: "list",
@@ -228,6 +228,65 @@ function removeEmployees() {
         term.bgYellow.bold.black("\nSelected employee has been removed successfully!");
         console.log("\n");
       })
+    });
+}
+
+
+//Function to handle "Update employees"
+
+async function updateEmployees() {
+
+  //import promise client
+  const promise = require('mysql2/promise');
+
+  // create the connection
+  const connection = await promise.createConnection({ host: 'localhost', user: 'root', database: 'employee_db', password: 'password' });
+
+
+  let roles = [];
+  let employees = [];
+  let managers = [];
+
+
+  const [roleRes] = await connection.execute("SELECT id, title FROM role r");
+
+  const [employeeRes] = await connection.execute('SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee ORDER BY name ASC')
+
+  const [managerRes] = await connection.execute('SELECT m.id, CONCAT(m.first_name, " ",  m.last_name) AS manager FROM employee m LEFT JOIN employee e ON m.id = e.manager_id WHERE m.manager_id != ? ORDER BY manager ASC', ["null"]);
+
+
+  roleRes.forEach(role => roles.push({ name: role.title, value: role.id }));
+
+  employeeRes.forEach(employee => employees.push({ name: employee.name, value: employee.id }));
+
+  managerRes.forEach(manager => managers.push({ name: manager.manager, value: manager.id }));
+
+
+}
+
+function updateEmployees() {
+
+  //Get employee id and name for prompt's choice
+  connection.promise().query('SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee ORDER BY name ASC')
+    .then(([res]) => {
+
+      let employees = [];
+
+      res.forEach(employee => employees.push({ name: employee.name, value: employee.id }));
+
+      //Prompt questions - update employee
+      prompt({
+        name: "empID",
+        type: "list",
+        message: "Which employee would you like to update?",
+        choices: employees
+      }).then(answer => {
+        connection.promise().query('UPDATE employee SET first_name = ?, last_name = ? WHERE id=?', [answer.empID]);
+
+        //Notify user 
+        term.bgYellow.bold.black("\nSelected employee has been removed successfully!");
+        console.log("\n");
+      });
     });
 }
 
