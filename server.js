@@ -111,7 +111,8 @@ function readEmpByMngr() {
   );
 };
 
-// Use async ... await 
+
+// Use async ... await to handle "Add employees by managers"
 async function addEmployees() {
   //import promise client
   const promise = require('mysql2/promise');
@@ -132,8 +133,58 @@ async function addEmployees() {
 
   // Prompt "Add employees" questions 
 
+  const answer = await prompt([
+    {
+      name: "firstName",
+      type: "inpiut",
+      message: "What is the employee's First Name?",
+      validate: function(name) {
+        let pass = name.match(/^[a-zA-ZäöüßÄÖÜ]+$/);
+        if (pass) {
+          return true;
+        }
+        return 'Please enter a valid name.';
+      }
+    },
+    {
+      name: "lastName",
+      type: "inpiut",
+      message: "What is the employee's Last Name?",
+      validate: function(name) {
+        let pass = name.match(/^[a-zA-ZäöüßÄÖÜ]+$/);
+        if (pass) {
+          return true;
+        }
+        return 'Please enter a valid name.';
+      }
+    },
+    {
+      name: "role",
+      type: "list",
+      message: "What is the employee's role?",
+      choices: roles
 
+    },
+    {
+      name: "addManagerNot",
+      type: "confirm",
+      message: "Would you like to add the employee's manager?",
+      default: false
+    },
+    {
+      name: "manager",
+      type: "list",
+      message: "Who is the employee's manager?",
+      when: function(answers) {
+        return answers.addManagerNot !== false;
+      },
+      choices: managers
+    }
+  ])
 
+  if (answer.addManagerNot === false) {
+    
+  }
   
 
 }
@@ -141,7 +192,7 @@ async function addEmployees() {
 
 
 
-//Function to handle "Add employees by managers"
+
 
 
 
