@@ -57,24 +57,23 @@ INSERT INTO employee
 	(first_name, last_name, role_id, manager_id)
 VALUES
 	("Hazel", "Cole", 17 , null),
-	("Yo", "Shi", 1, null),
-	("Yoda", "Shiya", 2, null),
-	("Yosih", "Tomaya", 3, null),
-	("Bret", "Graham", 4, null),
-	("Kulas", "Light", 5, 4),
-	("John", "Smith", 6, null),
-	("Mary", "Jane", 7, 6),
-	("Jane", "Doe", 8, null),
-	("Victor", "Pains", 9, 8),
-	("Ervin", "Howell", 10, null),
-	("Darcy", "Goodwill", 11, null),
-	("Steven", "King", 11, 17),
-	("Jon", "Crisma", 12, 17),
-	("Mike", "Goodrum", 13, 17),
-	("Peter", "Steek", 14, 17),
-	("Saul", "Howard", 15, 17),
-	("Nick", "Sol", 16, 17);
-
+	("Peter", "Steek", 14, 1),
+	("Saul", "Howard", 15, 1),
+	("Nick", "Sol", 16, 1),
+	("Mary", "Jane", 7, null),
+	("Bret", "Graham", 4, 3),
+	("Victor", "Pains", 9, 3),
+	("Yoda", "Shiya", 2, 2),
+	("Steven", "King", 11, 4),
+	("Jon", "Crisma", 12, 1),
+	("Mike", "Goodrum", 13, null),
+	("Yosih", "Tomaya", 3, 1),
+	("Kulas", "Light", 5,null),
+	("John", "Smith", 6, 5),
+	("Jane", "Doe", 8,7),
+	("Ervin", "Howell", 11,4),
+	("Darcy", "Goodwill", 10, null),
+	("Yo", "Shi", 1, 8);
 
 
 -- SELF JOIN - SET MANAGER_ID 
