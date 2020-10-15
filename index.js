@@ -5,11 +5,11 @@ const inquirer = require('inquirer');
 const term = require("terminal-kit").terminal;
 require('console.table');
 
-const startDisplay = require('./lib/starter');
+const messageDisplay = require('./lib/messageDisplay');
 
 // DISPLAY EMPLOYEE TRACKER WHEN STARTING THE APP =============================================================================================
 
-// startDisplay();
+messageDisplay.start();
 
 
 // WRAP EVERYTHING IN ASYNC AWAIT FUNCTION =============================================================================================
@@ -328,7 +328,12 @@ const startDisplay = require('./lib/starter');
           console.log("\n");
           break;
         }
+      case "Exit":
+        messageDisplay.exit();
+        shouldQuit = true;
     };
   };
+
+  
   connection.end();
 })();
