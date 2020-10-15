@@ -74,6 +74,7 @@ messageDisplay.start();
     
     // Handle Each Task 
     switch (task) {
+      //View all employees
       case "View All Employees":
         {
         //employees is the first index of returned data 
@@ -82,6 +83,7 @@ messageDisplay.start();
         console.log("\n");
         break;
         }
+      // View All Departments
       case "View All Departments":
         {
           const departments = await db.getDepartments();
@@ -89,6 +91,7 @@ messageDisplay.start();
           console.log("\n");
           break;
         }
+      // View All Roles
       case "View All Roles":
         {
           const roles = await db.getRoles();
@@ -96,6 +99,7 @@ messageDisplay.start();
           console.log("\n");
           break;
         }
+      // View Employees by Managers
       case "View Employees by Managers":
         {
           const empManager = await db.viewEmpManager();
@@ -103,6 +107,7 @@ messageDisplay.start();
           console.log("\n");
           break;
         }
+      // Add Employees
       case "Add Employees":
         {
           const [roles, employees] = await Promise.all([db.getRoles(), db.getEmployees()]);
@@ -123,7 +128,6 @@ messageDisplay.start();
               name: "roleId",
               type: "list",
               message: "What is the employee's role?",
-              // roles.map((role) => ({name:role.title, value: role.id}))
               choices: roles.map(({ id, title }) => ({ name: title, value: id }))
             },
             {
@@ -133,19 +137,14 @@ messageDisplay.start();
               default: false
             },
             {
-              // when: (answers) => answers.shouldAddManager,
               when: ({ shouldAddManager }) => shouldAddManager,
               name: "managerId",
               type: "list",
               message: "Who is the employee's manager?",
-              // when: function(answers) {
-              //   return answers.addManagerNot !== false;
-              // },
               choices: employees.map(({ id, first_name, last_name }) => ({ name: `${first_name} ${last_name}`, value: id }))
             }
           ]);
 
-          //Update database
           const newEmployee = await db.createEmployee(answers);
 
           //Notify user 
@@ -153,6 +152,7 @@ messageDisplay.start();
           console.log("\n");
           break;    
         }
+      // Add Roles
       case "Add Roles":
         {
           const departments = await db.getDepartments();
@@ -161,7 +161,6 @@ messageDisplay.start();
               name: "departmentId",
               type: "list",
               message: "Which department would you like to add the role to?",
-              // roles.map((role) => ({name:role.title, value: role.id}))
               choices: departments.map(({ id, name }) => ({ name: name, value: id }))
             },
             {
@@ -183,8 +182,8 @@ messageDisplay.start();
           term.bgBlue.bold.black("\nA role has been added successfully!");
           console.log("\n");
           break; 
-
         }
+      // Add Departments
       case "Add Departments":
         {
           const answers = await inquirer.prompt([
@@ -202,6 +201,7 @@ messageDisplay.start();
           console.log("\n");
           break; 
         }  
+      // Update Employee Role
       case "Update Employee Role": 
         {
           const [roles, employees] = await Promise.all([db.getRoles(), db.getEmployees()]);
@@ -221,16 +221,14 @@ messageDisplay.start();
             },
           ])
 
-         
           const roleUpdate = await db.updateEmpRole(answers); 
 
           //Notify user
           term.bgMagenta.bold.black("\nThe employee's role has been updated successfully!");
           console.log("\n");
           break; 
-
         }
-    
+      // Update employee Manager
       case "Update employee Manager":
         {
           const employees = await db.getEmployees();
@@ -257,7 +255,7 @@ messageDisplay.start();
           console.log("\n");
           break;
         }
-     
+      // Delete Employees
       case "Delete Employees":
         {
           const employees = await db.getEmployees();
@@ -278,7 +276,7 @@ messageDisplay.start();
           console.log("\n");
           break;
         }
-
+      // Delete Departments
       case "Delete Departments":
         {
           const departments = await db.getDepartments();
@@ -299,7 +297,7 @@ messageDisplay.start();
           console.log("\n");
           break;
         }
-        
+      // Delete Roles
       case "Delete Roles":
         {
           const roles = await db.getRoles();
@@ -320,7 +318,7 @@ messageDisplay.start();
           console.log("\n");
           break;
         }
-        
+      // View Department's Utilized Budget
       case "View Department's Utilized Budget":
         {
           const viewBudget = await db.viewDeptBudget();
@@ -328,12 +326,13 @@ messageDisplay.start();
           console.log("\n");
           break;
         }
+      // Exit
       case "Exit":
+        //imported function from messageDisplay file 
         messageDisplay.exit();
         shouldQuit = true;
     };
   };
-
-  
+  // Disconnect from database
   connection.end();
 })();
