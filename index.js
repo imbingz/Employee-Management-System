@@ -157,6 +157,7 @@ messageDisplay.start();
       case "Add Roles":
         {
           const departments = await db.getDepartments();
+          const roles = await db.getRoles();
           const answers = await inquirer.prompt([
             {
               name: "departmentId",
@@ -168,6 +169,7 @@ messageDisplay.start();
             name: "roleName",
             type: "input",
             message: "What is the role you would like to add?",
+            validate: (name) => { for (const role of roles) { if (role.title.toLowerCase().split(" ").includes(name.toLowerCase())) { console.log(`\n${name} role already exists`); return false; } } }
             },
             {
               name: "salary",
@@ -191,7 +193,7 @@ messageDisplay.start();
               name: "deptName",
               type: "input",
               message: "What is the department you would like to add?",
-              validate: (name) => { for (const dept of depts) { if (dept.name.toLowerCase().split(" ").includes(name.toLowerCase())) {  console.log(`\n${name} already exists`); return false; } } }
+              validate: (name) => { for (const dept of depts) { if (dept.name.toLowerCase().split(" ").includes(name.toLowerCase())) { console.log(`\n${name} department already exists`); return false; } } }
             }
           ])
           const newDept = await db.createDepartment(answers)
