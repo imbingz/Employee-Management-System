@@ -53,8 +53,9 @@ const startDisplay = require('./lib/starter');
     deleteRole: async ({ roleId }) => {
       return (await connection.query("DELETE FROM role WHERE ?", [{ id: roleId }]))[0];
     },
-    
-
+    viewDptBudget: async ( ) => {
+      return (await connection.query("SELECT d.name, SUM(salary) AS utilized_budget FROM department d LEFT JOIN role r ON r.department_id = d.id GROUP BY d.name;"))[0];
+    }
   };
 
   let shouldQuit = false;
@@ -300,9 +301,28 @@ const startDisplay = require('./lib/starter');
         }
         
       case "Delete Roles":
+        {
+          const roles = await db.getRoles();
+
+          const answers = await inquirer.prompt([
+            {
+              name: "roleId",
+              type: "list",
+              message: "Choose the role you would like to delete",
+              choices: roles.map(({ id, title }) => ({ name: title, value: id }))
+            },
+          ]);
+
+          const removeRole = await db.deleteRole(answers);
+
+          //Notify user
+          term.bgGreen.bold.black("\nThe selected role has been deleted successfully!");
+          console.log("\n");
+          break;
+        }
         
-        
-      // case "View Department's Utilized Budget":
+      case "View Department's Utilized Budget":
+
       //   viewDptBudget();
       //   break;
       // case "Exit":
