@@ -185,11 +185,13 @@ messageDisplay.start();
       // Add Departments
       case "Add Departments":
         {
+          const depts = await db.getDepartments();
           const answers = await inquirer.prompt([
             {
               name: "deptName",
               type: "input",
-              message: "What is the department you would like to add?"
+              message: "What is the department you would like to add?",
+              validate: (name) => { for (const dept of depts) { if (dept.name.toLowerCase().split(" ").includes(name.toLowerCase())) {  console.log(`\n${name} already exists`); return false; } } }
             }
           ])
           const newDept = await db.createDepartment(answers)
