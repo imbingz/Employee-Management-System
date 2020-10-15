@@ -144,7 +144,6 @@ const startDisplay = require('./lib/starter');
             name: "roleName",
             type: "input",
             message: "What is the role you would like to add?",
-            // validate: (name) => name || 'Please enter a role.'
             },
             {
               name: "salary",
@@ -164,12 +163,27 @@ const startDisplay = require('./lib/starter');
         }
       case "Add Departments":
         {
+          const answers = await inquirer.prompt([
+            {
+              name: "deptName",
+              type: "input",
+              message: "What is the department you would like to add?"
+            }
+          ])
+
+          const newDept = await db.createDepartment(answers)
+
+          //Notify user 
+          term.bgBlue.bold.black("\nA department has been added successfully!");
+          console.log("\n");
+          break; 
+        }  
+      case "Update Employee's Roles": 
+        {
+          const employees = await db.getEmployees();
           
         }
-      //   
-      // case "Update Employee's Roles":
-      //   updateEmpRoles();
-      //   break;
+    
       // case "Update employee Manager":
       //   updateEmpManager();
       //   break;
