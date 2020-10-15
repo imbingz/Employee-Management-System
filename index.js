@@ -192,9 +192,7 @@ messageDisplay.start();
               message: "What is the department you would like to add?"
             }
           ])
-
           const newDept = await db.createDepartment(answers)
-
           //Notify user 
           term.bgBlue.bold.black("\nA department has been added successfully!");
           console.log("\n");
@@ -242,9 +240,7 @@ messageDisplay.start();
               choices: employees.map(({ id, first_name, last_name }) => ({ name: `${first_name} ${last_name}`, value: id }))
             },
           ]);
-
           const managerUpdate = await db.updateEmpManager(answers);
-
           //Notify user
           term.bgMagenta.bold.black("\nThe employee's manager has been updated successfully!");
           console.log("\n");
@@ -262,9 +258,7 @@ messageDisplay.start();
               choices: employees.map(({ id, first_name, last_name }) => ({ name: `${first_name} ${last_name}`, value: id }))
             },
           ])
-
           const removeEmp = await db.deleteEmployee(answers);
-
           //Notify user
           term.bgGreen.bold.black("\nThe selected employee has been deleted successfully!");
           console.log("\n");
@@ -282,9 +276,7 @@ messageDisplay.start();
               choices: departments.map(({ id, name }) => ({ name: name, value: id }))
             },
           ]);
-
           const removeDept = await db.deleteDepartment(answers);
-
           //Notify user
           term.bgGreen.bold.black("\nThe selected department has been deleted successfully!");
           console.log("\n");
