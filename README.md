@@ -27,7 +27,7 @@
 
 
   ## Screenshots-Demo
-  <kbd>![screenshot-demo1](./assets/s1.png)</kbd><kbd>![screenshot-demo2](./assets/s2.png)</kbd>
+  <kbd>![screenshot-demo1](./Assets/s1.png)</kbd><kbd>![screenshot-demo2](./Assets/s2.png)</kbd>
   
   ## Project Objective
   Developers are often tasked with creating interfaces that make it easy for non-developers to view and interact with information stored in databases. The object is to architect and build a solution for managing a company's employees using node, inquirer, and MySQL.
