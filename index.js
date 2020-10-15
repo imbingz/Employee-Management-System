@@ -29,6 +29,9 @@ const startDisplay = require('./lib/starter');
     getEmployees: async () => {
       return (await connection.query("SELECT * from employee"))[0];
     },
+    viewEmpManager: async () => {
+      return (await connection.query("SELECT e.id, e.first_name, e.last_name,  CONCAT(m.first_name, ' ', m.last_name) AS manager, m.role_id FROM employee e LEFT JOIN employee m ON m.id = e.manager_id ORDER BY m.role_id DESC"))[0];
+    },
     createEmployee: async ({ firstName, lastName, roleId, managerId }) => {
       return (await connection.query("INSERT INTO employee SET ?", { first_name: firstName, last_name: lastName, role_id: roleId, manager_id: managerId }))[0];
     },
@@ -41,6 +44,17 @@ const startDisplay = require('./lib/starter');
     updateEmpManager: async ({ managerId , employeeId }) => {
       return (await connection.query("UPDATE employee SET ? WHERE ?", [{ manager_id: managerId }, { id: employeeId }]))[0];
     },
+    deleteEmployee: async ({ employeeId }) => {
+      return (await connection.query("DELETE FROM employee WHERE ?", [{ id: employeeId }]))[0];
+    },
+    deleteDepartment: async ({ deptId }) => {
+      return (await connection.query("DELETE FROM department WHERE ?", [{ id: deptId }]))[0];
+    },
+    deleteRole: async ({ roleId }) => {
+      return (await connection.query("DELETE FROM role WHERE ?", [{ id: roleId }]))[0];
+    },
+    
+
   };
 
   let shouldQuit = false;
@@ -53,7 +67,7 @@ const startDisplay = require('./lib/starter');
         name: "task",
         type: "list",
         message: "What would you like to do?",
-        choices: ["View All Employees", "View All Departments", "View All Roles", "Add Employees", "Add Roles", "Add Departments", "Update Employee Role", "Update employee Manager", "View Employees by Managers", "Delete Employees", "Delete Departments", "Delete Roles", "View Department's Utilized Budget", "Exit"]
+        choices: ["View All Employees", "View All Departments", "View All Roles", "View Employees by Managers", "Add Employees", "Add Roles", "Add Departments", "Update Employee Role", "Update employee Manager", "Delete Employees", "Delete Departments", "Delete Roles", "View Department's Utilized Budget", "Exit"]
       }
     );
     
@@ -78,6 +92,13 @@ const startDisplay = require('./lib/starter');
         {
           const roles = await db.getRoles();
           console.table("\n", roles, "\n");
+          console.log("\n");
+          break;
+        }
+      case "View Employees by Managers":
+        {
+          const empManager = await db.viewEmpManager();
+          console.table("\n", empManager, "\n");
           console.log("\n");
           break;
         }
@@ -228,29 +249,59 @@ const startDisplay = require('./lib/starter');
             },
           ]);
 
-
           const managerUpdate = await db.updateEmpManager(answers);
 
           //Notify user
           term.bgMagenta.bold.black("\nThe employee's manager has been updated successfully!");
           console.log("\n");
           break;
-
         }
-      //   updateEmpManager();
-      //   break;
-      // case "View Employees by Managers":
-      //   viewEmpByManagers();
-      //   break;
-      // case "Delete Employees":
-      //   deleteEmployees();
-      //   break;
-      // case "Delete Departments":
-      //   deleteDepartments();
-      //   break;
-      // case "Delete Roles":
-      //   deleteRoles();
-      //   break;
+     
+      case "Delete Employees":
+        {
+          const employees = await db.getEmployees();
+
+          const answers = await inquirer.prompt([ 
+            {
+              name: "employeeId",
+              type: "list",
+              message: "Choose the employee you would like to delete",
+              choices: employees.map(({ id, first_name, last_name }) => ({ name: `${first_name} ${last_name}`, value: id }))
+            },
+          ])
+
+          const removeEmp = await db.deleteEmployee(answers);
+
+          //Notify user
+          term.bgGreen.bold.black("\nThe selected employee has been deleted successfully!");
+          console.log("\n");
+          break;
+        }
+
+      case "Delete Departments":
+        {
+          const departments = await db.getDepartments();
+
+          const answers = await inquirer.prompt([
+            {
+              name: "deptId",
+              type: "list",
+              message: "Choose the department you would like to delete",
+              choices: departments.map(({ id, name }) => ({ name: name, value: id }))
+            },
+          ]);
+
+          const removeDept = await db.deleteDepartment(answers);
+
+          //Notify user
+          term.bgGreen.bold.black("\nThe selected department has been deleted successfully!");
+          console.log("\n");
+          break;
+        }
+        
+      case "Delete Roles":
+        
+        
       // case "View Department's Utilized Budget":
       //   viewDptBudget();
       //   break;
