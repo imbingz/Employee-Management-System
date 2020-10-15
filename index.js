@@ -48,7 +48,7 @@ const startDisplay = require('./lib/starter');
       }
     );
     
-    // Each task 
+    // Handle Each Task 
     switch (task) {
       case "View All Employees":
         {
@@ -73,37 +73,84 @@ const startDisplay = require('./lib/starter');
           break;
         }
       case "Add Employees":
-        addEmployees();
-        break;
-      case "Add Roles":
-        addRoles();
-        break;
-      case "Add Departments":
-        addDepartments();
-        break;
-      case "Update Employee's Roles":
-        updateEmpRoles();
-        break;
-      case "Update employee Manager":
-        updateEmpManager();
-        break;
-      case "View Employees by Managers":
-        viewEmpByManagers();
-        break;
-      case "Delete Employees":
-        deleteEmployees();
-        break;
-      case "Delete Departments":
-        deleteDepartments();
-        break;
-      case "Delete Roles":
-        deleteRoles();
-        break;
-      case "View Department's Utilized Budget":
-        viewDptBudget();
-        break;
-      case "Exit":
-        connection.end();
+        {
+          const [roles, employees] = await Promise.all([db.getRoles(), db.getEmployees()]);
+          const answers = await inquirer.prompt([
+            {
+              name: "firstName",
+              type: "input",
+              message: "What is the employee's First Name?",
+              validate: (name) => /^[a-zA-ZäöüßÄÖÜ]+$/.test(name) || 'Please enter a valid name.'
+            },
+            {
+              name: "lastName",
+              type: "input",
+              message: "What is the employee's Last Name?",
+              validate: (name) => /^[a-zA-ZäöüßÄÖÜ]+$/.test(name) || 'Please enter a valid name.'
+            },
+            {
+              name: "roleId",
+              type: "list",
+              message: "What is the employee's role?",
+              // roles.map((role) => ({name:role.title, value: role.id}))
+              choices: roles.map(({ id, title }) => ({ name: title, value: id }))
+            },
+            {
+              name: "shouldAddManager",
+              type: "confirm",
+              message: "Would you like to add the employee's manager?",
+              default: false
+            },
+            {
+              // when: (answers) => answers.shouldAddManager,
+              when: ({ shouldAddManager }) => shouldAddManager,
+              name: "managerId",
+              type: "list",
+              message: "Who is the employee's manager?",
+              // when: function(answers) {
+              //   return answers.addManagerNot !== false;
+              // },
+              choices: employees.map(({ id, first_name, last_name }) => ({ name: `${first_name} ${last_name}`, value: id }))
+            }
+          ]);
+
+          //Update database
+          const newEmployee = await db.createEmployee(answers);
+
+          //Notify user 
+          term.bgBlue.bold.black("\nAn employee has been added successfully!");
+          console.log("\n");
+          break;    
+        }
+      // case "Add Roles":
+        
+      //   break;
+      // case "Add Departments":
+      //   addDepartments();
+      //   break;
+      // case "Update Employee's Roles":
+      //   updateEmpRoles();
+      //   break;
+      // case "Update employee Manager":
+      //   updateEmpManager();
+      //   break;
+      // case "View Employees by Managers":
+      //   viewEmpByManagers();
+      //   break;
+      // case "Delete Employees":
+      //   deleteEmployees();
+      //   break;
+      // case "Delete Departments":
+      //   deleteDepartments();
+      //   break;
+      // case "Delete Roles":
+      //   deleteRoles();
+      //   break;
+      // case "View Department's Utilized Budget":
+      //   viewDptBudget();
+      //   break;
+      // case "Exit":
+      //   connection.end();
     };
   };
   connection.end();
