@@ -41,6 +41,9 @@ messageDisplay.start();
     createDepartment: async ({ deptName }) => {
       return (await connection.query("INSERT INTO department SET ?", { name: deptName }))[0];
     },
+    updateEmpRole: async ({ roleId , employeeId }) => {
+      return (await connection.query("UPDATE employee SET ? WHERE ?", [{ role_id: roleId }, { id: employeeId }]))[0];
+    },
     updateEmpManager: async ({ managerId , employeeId }) => {
       return (await connection.query("UPDATE employee SET ? WHERE ?", [{ manager_id: managerId }, { id: employeeId }]))[0];
     },
