@@ -53,7 +53,7 @@ const startDisplay = require('./lib/starter');
     deleteRole: async ({ roleId }) => {
       return (await connection.query("DELETE FROM role WHERE ?", [{ id: roleId }]))[0];
     },
-    viewDptBudget: async ( ) => {
+    viewDeptBudget: async ( ) => {
       return (await connection.query("SELECT d.name, SUM(salary) AS utilized_budget FROM department d LEFT JOIN role r ON r.department_id = d.id GROUP BY d.name;"))[0];
     }
   };
@@ -322,11 +322,12 @@ const startDisplay = require('./lib/starter');
         }
         
       case "View Department's Utilized Budget":
-
-      //   viewDptBudget();
-      //   break;
-      // case "Exit":
-      //   connection.end();
+        {
+          const viewBudget = await db.viewDeptBudget();
+          console.table("\n", viewBudget, "\n");
+          console.log("\n");
+          break;
+        }
     };
   };
   connection.end();
