@@ -32,6 +32,13 @@ const startDisplay = require('./lib/starter');
     createEmployee: async ({ firstName, lastName, roleId, managerId }) => {
       return (await connection.query("INSERT INTO employee SET ?", { first_name: firstName, last_name: lastName, role_id: roleId, manager_id: managerId }))[0];
     },
+    createRole: async ({ roleName, salary, departmentId }) => {
+      return (await connection.query("INSERT INTO role SET ?", { title: roleName, salary: salary, department_id: departmentId }))[0];
+    },
+    createDepartment: async ({ deptName }) => {
+      return (await connection.query("INSERT INTO department SET ?", { name: deptName }))[0];
+    },
+
   };
 
   let shouldQuit = false;
@@ -122,12 +129,44 @@ const startDisplay = require('./lib/starter');
           console.log("\n");
           break;    
         }
-      // case "Add Roles":
-        
-      //   break;
-      // case "Add Departments":
-      //   addDepartments();
-      //   break;
+      case "Add Roles":
+        {
+          const departments = await db.getDepartments();
+          const answers = await inquirer.prompt([
+            {
+              name: "departmentId",
+              type: "list",
+              message: "Which department would you like to add the role to?",
+              // roles.map((role) => ({name:role.title, value: role.id}))
+              choices: departments.map(({ id, name }) => ({ name: name, value: id }))
+            },
+            {
+            name: "roleName",
+            type: "input",
+            message: "What is the role you would like to add?",
+            // validate: (name) => name || 'Please enter a role.'
+            },
+            {
+              name: "salary",
+              type: "input",
+              message: "What is the annual salary for this role?",
+              validate: (salary) => !isNaN(salary) && /^[0-9]+$/.test(salary) || 'Please enter a valid number.'
+            }
+          ])
+
+          const newRole = await db.createRole(answers);
+
+          //Notify user 
+          term.bgBlue.bold.black("\nA role has been added successfully!");
+          console.log("\n");
+          break; 
+
+        }
+      case "Add Departments":
+        {
+          
+        }
+      //   
       // case "Update Employee's Roles":
       //   updateEmpRoles();
       //   break;
