@@ -147,9 +147,7 @@ messageDisplay.start();
               choices: employees.map(({ id, first_name, last_name }) => ({ name: `${first_name} ${last_name}`, value: id }))
             }
           ]);
-
           const newEmployee = await db.createEmployee(answers);
-
           //Notify user 
           term.bgBlue.bold.black("\nAn employee has been added successfully!");
           console.log("\n");
@@ -178,9 +176,7 @@ messageDisplay.start();
               validate: (salary) => !isNaN(salary) && /^[0-9]+$/.test(salary) || 'Please enter a valid number.'
             }
           ])
-
           const newRole = await db.createRole(answers);
-
           //Notify user 
           term.bgBlue.bold.black("\nA role has been added successfully!");
           console.log("\n");
@@ -208,7 +204,6 @@ messageDisplay.start();
       case "Update Employee Role": 
         {
           const [roles, employees] = await Promise.all([db.getRoles(), db.getEmployees()]);
-
           const answers = await inquirer.prompt([
             {
               name: "employeeId",
@@ -223,9 +218,7 @@ messageDisplay.start();
               choices: roles.map(({ id, title }) => ({ name: title, value: id }))
             },
           ])
-
           const roleUpdate = await db.updateEmpRole(answers); 
-
           //Notify user
           term.bgMagenta.bold.black("\nThe employee's role has been updated successfully!");
           console.log("\n");
@@ -235,7 +228,6 @@ messageDisplay.start();
       case "Update employee Manager":
         {
           const employees = await db.getEmployees();
-
           const answers = await inquirer.prompt([
             {
               name: "employeeId",
@@ -262,7 +254,6 @@ messageDisplay.start();
       case "Delete Employees":
         {
           const employees = await db.getEmployees();
-
           const answers = await inquirer.prompt([ 
             {
               name: "employeeId",
@@ -283,7 +274,6 @@ messageDisplay.start();
       case "Delete Departments":
         {
           const departments = await db.getDepartments();
-
           const answers = await inquirer.prompt([
             {
               name: "deptId",
@@ -304,7 +294,6 @@ messageDisplay.start();
       case "Delete Roles":
         {
           const roles = await db.getRoles();
-
           const answers = await inquirer.prompt([
             {
               name: "roleId",
@@ -313,9 +302,7 @@ messageDisplay.start();
               choices: roles.map(({ id, title }) => ({ name: title, value: id }))
             },
           ]);
-
           const removeRole = await db.deleteRole(answers);
-
           //Notify user
           term.bgGreen.bold.black("\nThe selected role has been deleted successfully!");
           console.log("\n");
