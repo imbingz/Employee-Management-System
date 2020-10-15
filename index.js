@@ -38,6 +38,9 @@ const startDisplay = require('./lib/starter');
     createDepartment: async ({ deptName }) => {
       return (await connection.query("INSERT INTO department SET ?", { name: deptName }))[0];
     },
+    updateEmpRole: async ({ roleId, employeeId }) => {
+      return (await connection.query("UPDATE employee SET ? WHERE ?", [{ role_id: roleId }, { id: employeeId }]))[0];
+    },
 
   };
 
@@ -51,7 +54,7 @@ const startDisplay = require('./lib/starter');
         name: "task",
         type: "list",
         message: "What would you like to do?",
-        choices: ["View All Employees", "View All Departments", "View All Roles", "Add Employees", "Add Roles", "Add Departments", "Update Employee's Roles", "Update employee Manager", "View Employees by Managers", "Delete Employees", "Delete Departments", "Delete Roles", "View Department's Utilized Budget", "Exit"]
+        choices: ["View All Employees", "View All Departments", "View All Roles", "Add Employees", "Add Roles", "Add Departments", "Update Employee Role", "Update employee Manager", "View Employees by Managers", "Delete Employees", "Delete Departments", "Delete Roles", "View Department's Utilized Budget", "Exit"]
       }
     );
     
@@ -178,10 +181,33 @@ const startDisplay = require('./lib/starter');
           console.log("\n");
           break; 
         }  
-      case "Update Employee's Roles": 
+      case "Update Employee Role": 
         {
-          const employees = await db.getEmployees();
-          
+          const [roles, employees] = await Promise.all([db.getRoles(), db.getEmployees()]);
+
+          const answers = await inquirer.prompt([
+            {
+              name: "employeeId",
+              type: "list",
+              message: "Choose the employee for whom you would like to update the role",
+              choices: employees.map(({ id, first_name, last_name }) => ({ name: `${first_name} ${last_name}`, value: id }))
+            },
+            {
+              name: "roleId",
+              type: "list",
+              message: "Select a new role for the employee ",
+              choices: roles.map(({ id, title }) => ({ name: title, value: id }))
+            },
+          ])
+
+         
+          const roleUpdate = await db.updateEmpRole(answers); 
+
+          //Notify user
+          term.bgMagenta.bold.black("\nThe employee's role has been updated successfully!");
+          console.log("\n");
+          break; 
+
         }
     
       // case "Update employee Manager":
