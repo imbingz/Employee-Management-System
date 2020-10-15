@@ -27,6 +27,7 @@
 
 
   ## Screenshots-Demo
+  <kbd>![screenshot-demo1](./Assets/demo.gif)</kbd>
   <kbd>![screenshot-demo1](./Assets/s1.png)</kbd><kbd>![screenshot-demo2](./Assets/s2.png)</kbd>
   
   ## Project Objective
