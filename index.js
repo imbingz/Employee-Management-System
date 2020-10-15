@@ -7,16 +7,18 @@ require('console.table');
 
 const startDisplay = require('./lib/starter');
 
-// const questions = require('./lib/questions');
-
-
 // DISPLAY EMPLOYEE TRACKER WHEN STARTING THE APP =============================================================================================
 
-startDisplay();
+// startDisplay();
+
+
+// WRAP EVERYTHING IN ASYNC AWAIT FUNCTION =============================================================================================
 
 (async () => {
+  //conncect to database 
   const connection = await msql.createConnection({ host: 'localhost', user: 'root', database: 'employee_db', password: 'password' });
 
+  //reusable functions 
   const db = {
     getDepartments: async () => {
       return (await connection.query("SELECT * from department"))[0];
@@ -35,6 +37,8 @@ startDisplay();
   let shouldQuit = false;
 
   while (!shouldQuit) {
+
+    // Main Menu
     const { task } = await inquirer.prompt(
       {
         name: "task",
@@ -43,17 +47,31 @@ startDisplay();
         choices: ["View All Employees", "View All Departments", "View All Roles", "Add Employees", "Add Roles", "Add Departments", "Update Employee's Roles", "Update employee Manager", "View Employees by Managers", "Delete Employees", "Delete Departments", "Delete Roles", "View Department's Utilized Budget", "Exit"]
       }
     );
-
+    
+    // Each task 
     switch (task) {
       case "View All Employees":
-        viewAllEmployees();
+        {
+        //employees is the first index of returned data 
+        const employees = await db.getEmployees();
+        console.table("\n", employees, "\n");
+        console.log("\n");
         break;
+        }
       case "View All Departments":
-        viewDepartment();
-        break;
+        {
+          const departments = await db.getDepartments();
+          console.table("\n", departments, "\n");
+          console.log("\n");
+          break;
+        }
       case "View All Roles":
-        viewRoles();
-        break;
+        {
+          const roles = await db.getRoles();
+          console.table("\n", roles, "\n");
+          console.log("\n");
+          break;
+        }
       case "Add Employees":
         addEmployees();
         break;
