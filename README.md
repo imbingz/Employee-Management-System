@@ -61,8 +61,9 @@
   The following links have helped me with this project. <br> 
   [mysql2 Promise Wrapper](https://www.npmjs.com/package/mysql2#using-promise-wrapper) <br>
   [Node.js, MySQL and async/await](https://codeburst.io/node-js-mysql-and-async-await-6fb25b01b628) <br>
-  [How to Interact With a Database Using Async Functions in Node.js](https://dzone.com/articles/how-to-interact-with-a-database-using-async-functi)     <br>
-  [techonthenet.com](https://www.techonthenet.com/mysql/index.php)
+  [How to Interact With a Database Using Async Functions in Node.js](https://dzone.com/articles/how-to-interact-with-a-database-using-async-functi) <br>
+  [techonthenet.com](https://www.techonthenet.com/mysql/index.php) <br>
+  I also want to thank [@clarissareeve](https://github.com/clarissareeve) and [@JJessee1371](https://github.com/jjessee1371) for their time and help with mysql.
 
   ## Tests
   npm test
