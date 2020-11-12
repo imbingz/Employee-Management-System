@@ -48,7 +48,7 @@
 
   ## Technologies 
   ```
-  node.js, npm inquirer, mysql, Javascript
+  node.js, npm inquirer, mysql2, Javascript, terminal-kit, figlet
   ```
   
  ## Installation
